@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My To-Do App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f0f4f8; display: flex; justify-content: center; padding: 40px 16px; }
+    .container { background: white; border-radius: 12px; padding: 32px; width: 100%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    h1 { font-size: 26px; color: #1a1a2e; margin-bottom: 24px; }
+    form { display: flex; gap: 8px; margin-bottom: 24px; }
+    input[type="text"] { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; }
+    input[type="text"]:focus { border-color: #4a90e2; }
+    button[type="submit"] { padding: 10px 20px; background: #4a90e2; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; }
+    button[type="submit"]:hover { background: #357abd; }
+    ul { list-style: none; }
+    li { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; font-size: 15px; color: #333; }
+    li:hover { background: #f9f9f9; }
+    a { color: #e74c3c; text-decoration: none; font-size: 13px; padding: 4px 10px; border: 1px solid #e74c3c; border-radius: 6px; }
+    a:hover { background: #e74c3c; color: white; }
+    .empty { text-align: center; color: #aaa; padding: 30px 0; font-size: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My To-Do List</h1>
+    <form action="/add" method="post">
+      <input type="text" name="task" placeholder="Enter a new task..." required>
+      <button type="submit">Add</button>
+    </form>
+    {% if tasks %}
+    <ul>
+      {% for i, task in enumerate(tasks) %}
+      <li>
+        <span>{{ task }}</span>
+        <a href="/delete/{{ i }}">Delete</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty">No tasks yet. Add one above!</div>
+    {% endif %}
+  </div>
+</body>
+</html>
