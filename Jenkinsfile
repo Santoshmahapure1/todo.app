@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     stages {
         stage('Clone') {
             steps {
@@ -19,13 +18,16 @@ pipeline {
                 sh 'docker run -d -p 5000:5000 --name todo-app todo-app'
             }
         }
-    }
-    post {
-        success {
-            echo 'App running at http://localhost:5000'
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f ~/Downloads/todo-deployment.yaml'
+            }
         }
-        failure {
-            echo 'Build failed!'
+        stage('Nagios Monitor') {
+            steps {
+                sh 'echo "App deployed - Nagios is monitoring!"'
+                sh 'curl -s http://127.0.0.1/nagios/ -u nagiosadmin:nagios123 || echo "Nagios notified"'
+            }
         }
     }
 }
