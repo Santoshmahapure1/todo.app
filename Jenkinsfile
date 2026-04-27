@@ -1,29 +1,34 @@
 pipeline {
     agent any
+
     stages {
         stage('Clone') {
             steps {
-                echo 'Cloning repo...'
-                checkout scm
+                git branch: 'main', url: 'https://github.com/Santoshmahapure1/todo.app.git'
             }
         }
-        stage('Build') {
+
+        stage('Build Docker Image') {
             steps {
-                echo 'Building...'
-                sh 'echo Build complete!'
+                sh 'docker build -t todo-app .'
             }
         }
-        stage('Test') {
+
+        stage('Run Container') {
             steps {
-                echo 'Testing...'
-                sh 'echo Tests passed!'
+                sh 'docker stop todo-app || true'
+                sh 'docker rm todo-app || true'
+                sh 'docker run -d -p 5000:5000 --name todo-app todo-app'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                sh 'echo Deployed!'
-            }
+    }
+
+    post {
+        success {
+            echo 'App is running at http://localhost:5000'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
